@@ -1,0 +1,6 @@
+# backend/internal/config/config.prod.yaml
+
+server:
+  pocketbaseUrl: "https://your-production-domain.com" # URL вашего API в продакшене
+  pocketbasePort: "8090" # Порт может быть другим за прокси
+  appUrl: "https://your-app.com" # URL вашего фронтенда в продакшене

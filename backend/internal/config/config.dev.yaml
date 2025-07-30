@@ -1,0 +1,25 @@
+# Development Configuration
+server:
+  # Host for the PocketBase server. Use "0.0.0.0" to listen on all network interfaces.
+  pocketbaseHost: "127.0.0.1"
+  # Port for the PocketBase server.
+  pocketbasePort: "8090"
+  # URL of the frontend application. Used for generating absolute URLs in emails, etc.
+  appUrl: "http://localhost:5173"
+  # Directory where PocketBase will store its data, including the SQLite database and files.
+  dataDir: "pb_data"
+
+log:
+  # Logging level. Any messages below this level will be ignored.
+  # Possible values: "debug", "info", "warn", "error"
+  level: "debug"
+
+  # Log output format.
+  # "text" - Human-readable format, great for local development.
+  # "json" - Structured format, ideal for log aggregation systems (ELK, Datadog, etc.).
+  format: "text"
+
+  # Whether to include the source code location (file and line number) in the log output.
+  # true - Useful for debugging to quickly find where a log was called.
+  # false - Recommended for production to reduce log clutter and improve performance slightly.
+  addSource: false
