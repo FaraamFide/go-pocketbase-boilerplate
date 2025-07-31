@@ -1,3 +1,5 @@
+// Package services contains the business logic of the application.
+// It is called by handlers and interacts with data sources or other APIs.
 package services
 
 // HelloService provides a simple greeting.
@@ -7,7 +9,6 @@ type HelloService struct {
 	// Dependencies like a database connection would go here.
 }
 
-// NewHelloService creates a new instance of HelloService.
 func NewHelloService() *HelloService {
 	return &HelloService{}
 }

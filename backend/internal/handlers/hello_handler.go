@@ -1,3 +1,5 @@
+// Package handlers contains the HTTP handlers for the application's API endpoints.
+// They are responsible for parsing requests, calling services, and writing responses.
 package handlers
 
 import (
@@ -20,16 +22,15 @@ func NewHelloHandler(s *services.HelloService) *HelloHandler {
 	}
 }
 
-// Greet is the actual handler function that will be registered to a route.
-// It extracts data from the request, calls the service, and writes the response.
+// Greet is the handler function for the GET /api/hello route.
+// It extracts data from the request, calls the service, and writes a JSON response.
 func (h *HelloHandler) Greet(c *core.RequestEvent) error {
 	// Get a query parameter, e.g., /api/hello?name=Go
 	name := c.Request.URL.Query().Get("name")
 
 	// Call the service to get the business logic result.
 	message := h.service.GetGreeting(name)
-
-	// Return a JSON response.
+	
 	return c.JSON(http.StatusOK, map[string]string{
 		"message": message,
 	})

@@ -1,6 +1,8 @@
+// Package core handles the initialization and configuration of the PocketBase instance.
 package core
 
 import (
+	"fmt"
 	"github.com/FaraamFide/go-pocketbase-boilerplate/backend/internal/config"
 	"github.com/FaraamFide/go-pocketbase-boilerplate/backend/internal/hooks"
 	"github.com/FaraamFide/go-pocketbase-boilerplate/backend/internal/router"
@@ -8,22 +10,9 @@ import (
 	"github.com/pocketbase/pocketbase/plugins/migratecmd"
 )
 
-// NewPocketBase initializes and configures a PocketBase application instance.
-// This function encapsulates all PocketBase-specific setup logic, including:
-// - Setting the data directory and encryption key.
-// - Registering the command for automatic database migrations.
-// - Attaching application-specific event hooks and custom API routes.
-// - Configuring the server's command-line arguments for startup.
-// It returns a fully configured *pocketbase.Pocketbase instance, ready to be started.
-//
-// Parameters:
-//   - cfg (*config.Config): The application's configuration containing server settings and secrets.
-//
-// Returns:
-//   - *pocketbase.PocketBase: A pointer to the configured PocketBase application instance.
-//   - error: An error if any part of the initialization fails.
+// NewPocketBase creates and configures a new PocketBase application instance.
+// It encapsulates the setup of data directories, migrations, hooks, and routes.
 func NewPocketBase(cfg *config.Config) (*pocketbase.PocketBase, error) {
-	// Create a new PocketBase instance with configuration from our struct.
 	app := pocketbase.NewWithConfig(pocketbase.Config{
 		DefaultDataDir:       cfg.Server.DataDir,
 		DefaultEncryptionEnv: cfg.Secrets.EncryptionKey,
@@ -35,15 +24,16 @@ func NewPocketBase(cfg *config.Config) (*pocketbase.PocketBase, error) {
 		Automigrate: true, // Automatically run new migrations on startup.
 	})
 
-	// Register application-specific event hooks and custom API routes.
-	// This is where the application's custom business logic is attached to PocketBase.
-	hooks.RegisterHooks(app)
-	router.RegisterRoutes(app)
+	if err := hooks.RegisterHooks(app); err != nil {
+		return nil, fmt.Errorf("failed to register hooks: %w", err)
+	}
 
-	// == IMPORTANT ==
-	// Programmatically set the command-line arguments for starting the server.
-	// This is how we control the server's address and port without needing to pass
-	// flags on the command line when running the compiled binary.
+	if err := router.RegisterRoutes(app); err != nil {
+		return nil, fmt.Errorf("failed to register routes: %w", err)
+	}
+
+	// Configure PocketBase to use host and port from our config file
+	// instead of relying on command-line arguments
 	addr := cfg.Server.PocketbaseHost + ":" + cfg.Server.PocketbasePort
 	app.RootCmd.SetArgs([]string{"serve", "--http=" + addr})
 

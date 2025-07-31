@@ -5,8 +5,8 @@ OUTPUT_DIR = ./tmp
 BINARY_PATH = $(OUTPUT_DIR)/$(BINARY_NAME)
 
 # Configuration file paths
-DEV_CONFIG = internal/config/config.dev.yaml
-PROD_CONFIG = internal/config/config.prod.yaml
+DEV_CONFIG = ./configs/config.dev.yaml
+PROD_CONFIG = ./configs/config.prod.yaml
 
 # --- Main Targets ---
 .PHONY: help
