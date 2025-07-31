@@ -33,37 +33,26 @@ The project follows a standard Go layout to ensure clarity and maintainability.
 ```
 .
 ├── .air.toml                 # Configuration for Air (hot-reloading).
-├── .env                      # Local environment variables for secrets (e.g., encryption key).
-├── .env.example              # Example environment file.
-├── .gitignore                # Standard Go gitignore file.
+├── .env                      # Local environment variables for secrets 
 ├── Makefile                  # Common commands for development and builds.
 ├── cmd/
 │   └── app/
 │       └── main.go           # Application entry point.
+├── configs/
+│   ├── config.dev.yaml       # Configuration for the development environment.
+│   └── config.prod.yaml      # Configuration for the production environment.
 ├── go.mod                    # Go module definitions.
 ├── go.sum                    # Go module checksums.
 ├── internal/                 # Private application code.
 │   ├── config/               # Configuration loading and struct definitions.
-│   │   ├── config.dev.yaml   # Configuration for the development environment.
-│   │   ├── config.go         # Main configuration logic.
-│   │   └── config.prod.yaml  # Configuration for the production environment.
-│   ├── core/
-│   │   └── pocketbase.go     # Core PocketBase application setup and initialization.
-│   ├── handlers/
-│   │   └── hello_handler.go  # HTTP handlers that process requests.
-│   ├── hooks/
-│   │   └── hooks.go          # Logic for hooking into PocketBase core events.
-│   ├── logger/
-│   │   └── logger.go         # Structured logger initialization.
-│   ├── router/
-│   │   └── router.go         # Custom API route definitions.
-│   └── services/
-│       └── hello_service.go  # Business logic separated from handlers.
-├── pb_data/                  # PocketBase data directory (SQLite DB, storage). Ignored by Git.
-│   ├── data.db
-│   └── ...
+│   ├── core/                 # Core PocketBase application setup and initialization.
+│   ├── handlers/             # HTTP handlers that process requests.
+│   ├── hooks/                # Logic for hooking into PocketBase core events.
+│   ├── logger/               # Structured logger initialization.
+│   ├── router/               # Custom API route definitions.
+│   └── services/             # Business logic separated from handlers.
+├── pb_data/                  # PocketBase data directory (SQLite DB, storage). 
 └── pb_migrations/            # Directory for Go-based database migrations.
-    └── ...
 ```
 
 ## Installation and Setup
@@ -112,7 +101,7 @@ To run the application in development mode with hot-reloading, use the `dev` com
 make dev
 ```
 
-The server will be available at `http://127.0.0.1:8090`.
+The server will be available at `http://127.0.0.1:8090` by default.
 
 To run the application once without hot-reloading:
 ```bash
@@ -127,7 +116,7 @@ make build
 ```
 The binary will be created in the `tmp/` directory.
 
-To build and run the application using the production configuration (`internal/config/config.prod.yaml`):
+To build and run the application using the production configuration (`configs/config.prod.yaml`):
 ```bash
 make run-prod
 ```
@@ -146,8 +135,8 @@ Application configuration is managed through a combination of YAML files and env
 ### YAML Configuration
 
 There are two primary configuration files:
-*   `internal/config/config.dev.yaml`: Settings for the local development environment.
-*   `internal/config/config.prod.yaml`: Settings for the production environment.
+*   `configs/config.dev.yaml`: Settings for the local development environment.
+*   `configs/config.prod.yaml`: Settings for the production environment.
 
 The active configuration file is selected via the `--config` command-line flag, which is handled by the `Makefile`.
 
@@ -180,8 +169,8 @@ This boilerplate is designed for extension. The following sections describe how 
 
     ```go
     // internal/router/router.go
-
-    app.OnServe().BindFunc(func(e *core.ServeEvent) error {
+	
+	app.OnServe().BindFunc(func(e *core.ServeEvent) error {
         // ... existing service/handler instantiation
 
         // 1. Instantiate your new service and handler
@@ -222,14 +211,6 @@ func RegisterHooks(app *pocketbase.PocketBase) {
     slog.Info("Application hooks registered successfully")
 }
 ```
-
-### Database Migrations
-
-PocketBase can automatically run database migrations on startup. Migrations are Go files located in the `pb_migrations` directory. This feature is enabled in `internal/core/pocketbase.go` with `Automigrate: true`.
-
-To create a new migration, add a new `.go` file in `pb_migrations` with a function that matches the `func(db dbx.Builder) error` signature. PocketBase executes these files in lexicographical order.
-
-For more details, refer to the official [PocketBase "Use as framework" documentation](https://pocketbase.io/docs/go-use-as-framework/#database-migrations).
 
 ## API Reference
 
