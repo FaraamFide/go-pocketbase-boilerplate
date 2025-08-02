@@ -8,6 +8,9 @@ import (
 	"github.com/FaraamFide/go-pocketbase-boilerplate/backend/internal/config"
 	"github.com/FaraamFide/go-pocketbase-boilerplate/backend/internal/core"
 	"github.com/FaraamFide/go-pocketbase-boilerplate/backend/internal/logger"
+
+	// add if you have new migrations
+	// _ "github.com/FaraamFide/go-pocketbase-boilerplate/backend/migrations"
 )
 
 func main() {
